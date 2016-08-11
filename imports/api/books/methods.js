@@ -9,22 +9,32 @@ export const insertBook = new ValidatedMethod({
     title: { type: String },
     author: { type: String },
   }).validator(),
-  run(document) {
-    Books.insert(document);
+  run(book) {
+    Books.insert(book);
   },
 });
 
-export const updateBook = new ValidatedMethod({
-  name: 'books.update',
+export const updateBookTitle = new ValidatedMethod({
+  name: 'books.title.update',
   validate: new SimpleSchema({
     _id: { type: String },
     'update.title': { type: String, optional: true },
-    'update.author': { type: String, optional: true },
   }).validator(),
   run({ _id, update }) {
     Books.update(_id, { $set: update });
   },
 });
+
+export const updateBookAuthor = new ValidatedMethod({
+  name: 'books.author.update',
+  validate: new SimpleSchema({
+    _id: { type: String },
+    'update.author': { type: String, optional: true },
+  }).validator(),
+  run({ _id, update }) {
+    Books.update(_id, { $set: update })
+  },
+})
 
 export const removeBook = new ValidatedMethod({
   name: 'books.remove',
@@ -39,7 +49,8 @@ export const removeBook = new ValidatedMethod({
 rateLimit({
   methods: [
     insertBook,
-    updateBook,
+    updateBookTitle,
+    updateBookAuthor,
     removeBook,
   ],
   limit: 5,
